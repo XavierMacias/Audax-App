@@ -1,12 +1,14 @@
 
-document.getElementById('buttonSearch').addEventListener('click', function() {
-    const url = "https://en.wikipedia.org/w/api.php"; 
+document.getElementById('btnSearch').addEventListener('click', function() {
+    const url = "https://en.wikipedia.org/w/api.php";
+    const responseDiv = document.getElementById("response");
 
     const params = new URLSearchParams({
         action: "query",
         list: "search",
         srsearch: document.getElementById("word").value,
-        format: "json"
+        format: "json",
+        origin: "*"
     });
     console.log(document.getElementById("word").value);
     
@@ -15,9 +17,32 @@ document.getElementById('buttonSearch').addEventListener('click', function() {
             return response.json();
         })
         .then(function(response) {
-            console.log(response);
+            const responseList = response.query.search;
+
+            responseDiv.innerHTML = "";
+            
+            if (responseList.length > 0) {
+                const ul = document.createElement('ul');
+                responseList.forEach(res => {
+                    const li = document.createElement('li');
+                    
+                    const title = document.createElement('h3');
+                    title.innerHTML = `<a href="https://en.wikipedia.org/?curid=${res.pageid}" target="_blank">${res.title}</a>`;
+                    li.appendChild(title);
+
+                    const text = document.createElement('p');
+                    text.innerHTML = res.snippet;
+                    li.appendChild(text);
+
+                    ul.appendChild(li);
+                });
+                responseDiv.appendChild(ul);
+            } else {
+                responseDiv.innerHTML = '<p>No se han encontrado resultados</p>';
+            }
         })
         .catch(function(error){
             console.log(error);
+            responseDiv.innerText = "Ha habido un error: " + error;
         });
 });
