@@ -2,11 +2,12 @@
 document.getElementById('btnSearch').addEventListener('click', function() {
     const url = "https://en.wikipedia.org/w/api.php";
     const responseDiv = document.getElementById("response");
+    const searchWord = document.getElementById("word").value;
 
     const params = new URLSearchParams({
         action: "query",
         list: "search",
-        srsearch: document.getElementById("word").value,
+        srsearch: searchWord,
         format: "json",
         origin: "*"
     });
@@ -40,9 +41,26 @@ document.getElementById('btnSearch').addEventListener('click', function() {
             } else {
                 responseDiv.innerHTML = '<p>No se han encontrado resultados</p>';
             }
+            saveHistorical(searchWord, responseList.length);
+
         })
         .catch(function(error){
             console.log(error);
             responseDiv.innerText = "Ha habido un error: " + error;
         });
 });
+
+function saveHistorical(search, numResults) {
+    data = { search: search, num: numResults };
+
+    fetch('./php/addToDB.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.text())
+      .then(response => console.log(response))
+      .catch(error => console.error('Ha habido un error:', error));
+}
