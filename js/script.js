@@ -1,8 +1,25 @@
+const responseDiv = document.getElementById("response");
+const historialDiv = document.getElementById("historial");
+const searchInput = document.getElementById('word');
+const searchButton = document.getElementById('btnSearch');
+let hide = false;
+
+function checkInput() {
+    if (searchInput.value.trim() === '') {
+        searchButton.disabled = true;
+    } else {
+        searchButton.disabled = false;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', (e) => {
+    checkInput();
+    searchInput.addEventListener('input', checkInput);
+});
 
 document.getElementById('btnSearch').addEventListener('click', function() {
     const url = "https://en.wikipedia.org/w/api.php";
-    const responseDiv = document.getElementById("response");
-    const searchWord = document.getElementById("word").value;
+    const searchWord = searchInput.value;
 
     const params = new URLSearchParams({
         action: "query",
@@ -11,7 +28,6 @@ document.getElementById('btnSearch').addEventListener('click', function() {
         format: "json",
         origin: "*"
     });
-    console.log(document.getElementById("word").value);
     
     fetch(`${url}?${params}`)
         .then(function(response){
@@ -24,8 +40,13 @@ document.getElementById('btnSearch').addEventListener('click', function() {
             
             if (responseList.length > 0) {
                 const ul = document.createElement('ul');
+                ul.style.listStyle = 'none';
+
                 responseList.forEach(res => {
                     const li = document.createElement('li');
+                    li.style.borderStyle = 'solid';
+                    li.style.padding = '10px';
+                    li.style.borderRadius = '10px';
                     
                     const title = document.createElement('h3');
                     title.innerHTML = `<a href="https://en.wikipedia.org/?curid=${res.pageid}" target="_blank">${res.title}</a>`;
@@ -60,7 +81,59 @@ function saveHistorical(search, numResults) {
         },
         body: JSON.stringify(data)
       })
-      .then(response => response.text())
-      .then(response => console.log(response))
-      .catch(error => console.error('Ha habido un error:', error));
+      .then(response => {
+        return response.json();
+      })
+      .then(response => {
+        //console.log(response);
+      })
+      .catch(error => {
+        responseDiv.innerText = "Ha habido un error: " + error;
+      })
 }
+
+document.getElementById('btnHistorial').addEventListener('click', function() {
+
+    if(!hide) {
+        hide = true;
+
+        fetch('./php/getDB.php')
+        .then(response => {
+            return response.json();
+        })
+        .then(response => {
+            historialDiv.innerHTML = "";
+                
+            if (response.length > 0) {
+                const ul = document.createElement('ul');
+                ul.style.listStyle = 'none';
+
+                response.forEach(res => {
+                    const li = document.createElement('li');
+                    li.style.borderStyle = 'solid';
+                    li.style.padding = '10px';
+                    li.style.borderRadius = '10px';
+                        
+                    const search = document.createElement('h4');
+                    search.innerHTML = res.search + ' - ' + res.timestamp;
+                    li.appendChild(search);
+
+                    const num = document.createElement('p');
+                    num.innerHTML = 'Número de resultados: ' + res.numResults;
+                    li.appendChild(num);
+
+                    ul.appendChild(li);
+                });
+                historialDiv.appendChild(ul);
+            } else {
+                historialDiv.innerHTML = '<p>Historial vacío</p>';
+            }
+        }) 
+        .catch(error => {
+            historialDiv.innerHTML = 'Ha habido un error: ' + error;
+        });
+    } else {
+        historialDiv.innerHTML = "";
+        hide = false;
+    }
+});

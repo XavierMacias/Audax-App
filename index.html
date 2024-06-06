@@ -5,19 +5,26 @@
     <meta charset="UTF-8">
     <title>Audax Prueba</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" type="text/css" href="/css/styles.css" />
   </head>
 
   <body>
     <h1>Buscador</h1>
 
-    <input type="text" id="word" name="word">
-    <button type="submit" id="btnSearch">Buscar</button>
+    <div class="structure">
+    <div>
+      <input type="text" id="word" class="word">
+      <button type="submit" class="btn" id="btnSearch" disabled>Buscar</button>
+    
 
-    <div id="response"></div>
+      <div id="response"></div>
+      </div>
 
-    <button id="btnHistorial">Ver historial</button>
-    <div id="historial"></div>
+      <div>
+      <button id="btnHistorial" class="btn">Ver historial</button>
+      <div id="historial"></div>
+      </div>
+    </div>
 
     <script src="./js/script.js"></script>
   </body>

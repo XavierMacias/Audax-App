@@ -22,9 +22,13 @@ if (isset($data['search']) && isset($data['num'])) {
         $prepare->bindParam(':numResults', $numResults);
         
         $prepare->execute();
+        echo json_encode(array(''));
+        $connect = null;
 
     } catch (PDOException $ex) {
-        die("Error al conectarse a la base de datos $dbname :" . $ex->getMessage());
+        $connect = null;
+        echo json_encode(array("error" => "Error de conexión: " . $ex->getMessage()));
+
     }
 
 } else {
