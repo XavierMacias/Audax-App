@@ -22,3 +22,18 @@ h1 {
     font-size: xx-large;
     font-weight: bold;
 }
+
+li {
+    border-style: solid;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.historialDiv {
+    width: 50%;
+}
+
+.response {
+    width: 60%;
+}

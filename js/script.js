@@ -47,6 +47,7 @@ document.getElementById('btnSearch').addEventListener('click', function() {
                     li.style.borderStyle = 'solid';
                     li.style.padding = '10px';
                     li.style.borderRadius = '10px';
+                    li.style.marginBottom = '10px';
                     
                     const title = document.createElement('h3');
                     title.innerHTML = `<a href="https://en.wikipedia.org/?curid=${res.pageid}" target="_blank">${res.title}</a>`;
@@ -88,7 +89,7 @@ function saveHistorical(search, numResults) {
         //console.log(response);
       })
       .catch(error => {
-        responseDiv.innerText = "Ha habido un error: " + error;
+        console.log("Ha habido un error: " + error);
       })
 }
 
@@ -107,15 +108,17 @@ document.getElementById('btnHistorial').addEventListener('click', function() {
             if (response.length > 0) {
                 const ul = document.createElement('ul');
                 ul.style.listStyle = 'none';
+                ul.style.width = '40%';
 
                 response.forEach(res => {
                     const li = document.createElement('li');
                     li.style.borderStyle = 'solid';
                     li.style.padding = '10px';
                     li.style.borderRadius = '10px';
+                    li.style.marginBottom = '10px';
                         
                     const search = document.createElement('h4');
-                    search.innerHTML = res.search + ' - ' + res.timestamp;
+                    search.innerHTML = res.search + ': ' + res.timestamp;
                     li.appendChild(search);
 
                     const num = document.createElement('p');
